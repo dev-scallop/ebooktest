@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECTION 05 터틀 그래픽 프로그램 작성 - 연습문제</title>
+
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        :root {
+            --primary-color: #4f46e5;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --border-color: #e5e7eb;
+            --correct-color: #10b981;
+        }
+
+        body {
+            font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max_width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .quiz-item {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-color);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.875rem;
+        }
+
+        .quiz-type {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .quiz-difficulty {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: #111827;
+        }
+
+        .quiz-body {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .options {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        details {
+            margin-top: 16px;
+        }
+
+        summary {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 0;
+            user-select: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        summary:hover {
+            text-decoration: underline;
+        }
+
+        .answer-box {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            color: #065f46;
+        }
+        
+        .answer-box strong {
+            color: #047857;
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 40px;
+            text-decoration: none;
+            color: var(--text-sub);
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .btn-home:hover {
+            background: #f3f4f6;
+            color: var(--text-main);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+<div class="container">
+<h1>실전 연습문제</h1>
+<p class='subtitle'>SECTION 05 터틀 그래픽 프로그램 작성</p>
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[객관식]</span>
+    <span class='quiz-difficulty'>난이도: 하</span>
+  </div>
+  <h3>문제 1. 파이썬의 주석과 코드 작성법에 대한 설명으로 옳지 않은 것은?</h3>
+  <div class='quiz-body'>
+    본문에서 설명한 파이썬 프로그램의 기본 작성법과 주석 처리에 대한 내용 중 틀린 것을 고르시오.
+  </div>
+  <div class='options'>
+    <ol>
+      <li>한 줄 주석을 달 때는 코드 앞에 <code>#</code> 기호를 사용한다.</li>
+      <li>여러 줄에 걸쳐 주석을 달고 싶다면 작은따옴표 3개(<code>'''</code>)를 앞뒤로 감싸서 사용한다.</li>
+      <li>코드가 너무 길어져서 줄을 바꾸어 쓰고 싶을 때는 문장의 맨 뒤에 <code>/</code>(슬래시)를 붙인다.</li>
+      <li>프로그램의 가독성을 위해 함수 선언, 변수 선언, 메인 코드 부분으로 나누어 작성하는 것이 권장된다.</li>
+    </ol>
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong> 3번</p>
+      <p><strong>해설:</strong> 파이썬에서 코드가 길어져 줄을 바꿀 때, 컴퓨터가 한 줄로 인식하게 하려면 문장 맨 뒤에 역슬래시(<code>\</code>)를 붙여야 합니다. 슬래시(<code>/</code>)는 나눗셈 연산자입니다.</p>
+    </div>
+  </details>
+</div>
+
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[객관식]</span>
+    <span class='quiz-difficulty'>난이도: 중</span>
+  </div>
+  <h3>문제 2. 파이썬과 컴파일러 언어(C/C++, 자바)의 변수 선언 차이점으로 올바른 것은?</h3>
+  <div class='quiz-body'>
+    본문의 '여기서 잠깐 - 변수의 선언' 내용을 바탕으로 올바른 설명을 고르시오.
+  </div>
+  <div class='options'>
+    <ol>
+      <li>파이썬은 변수를 사용하기 전에 반드시 자료형(int, float 등)을 명시하여 선언해야 한다.</li>
+      <li>C언어는 변수를 선언하지 않고 바로 값을 대입하여 사용할 수 있다.</li>
+      <li>파이썬은 <code>a = 100</code>과 같이 값을 대입하는 순간 변수가 자동으로 선언 및 생성된다.</li>
+      <li>파이썬에서는 변수 선언 부분에 초깃값을 미리 대입해 두는 것이 문법적으로 금지되어 있다.</li>
+    </ol>
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong> 3번</p>
+      <p><strong>해설:</strong> 파이썬과 같은 인터프리터 언어는 변수를 별도로 선언하지 않고, 값을 대입하는 시점에 변수가 자동 생성되며 자료형이 결정됩니다. 반면 C/C++, 자바 등은 사용 전 반드시 변수 선언이 필요합니다.</p>
+    </div>
+  </details>
+</div>
+
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[객관식]</span>
+    <span class='quiz-difficulty'>난이도: 중</span>
+  </div>
+  <h3>문제 3. 터틀 그래픽 함수에 대한 설명으로 적절하지 않은 것은?</h3>
+  <div class='quiz-body'>
+    다음 중 본문에서 사용된 터틀 그래픽 관련 함수들의 기능 설명으로 틀린 것은 무엇인가?
+  </div>
+  <div class='options'>
+    <ol>
+      <li><code>turtle.penup()</code>: 펜을 들어 올려 이동 시 선이 그려지지 않게 한다.</li>
+      <li><code>turtle.goto(x, y)</code>: 거북이를 좌표 (x, y) 위치로 이동시킨다.</li>
+      <li><code>turtle.onscreenclick(함수명, 1)</code>: 마우스 오른쪽 버튼을 클릭했을 때 지정된 함수를 실행한다.</li>
+      <li><code>turtle.shapesize(크기)</code>: 거북이의 크기를 설정된 값으로 변경한다.</li>
+    </ol>
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong> 3번</p>
+      <p><strong>해설:</strong> <code>turtle.onscreenclick(함수명, 번호)</code>에서 번호가 1이면 마우스 '왼쪽' 버튼, 2는 '가운데' 버튼, 3은 '오른쪽' 버튼을 의미합니다. 따라서 3번 설명은 틀렸습니다.</p>
+    </div>
+  </details>
+</div>
+
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[단답형]</span>
+    <span class='quiz-difficulty'>난이도: 하</span>
+  </div>
+  <h3>문제 4. 전역 변수 사용 키워드</h3>
+  <div class='quiz-body'>
+    함수 내부에서 함수 외부에 선언된 변수(전역 변수)의 값을 변경하거나 사용하려 할 때, 해당 변수 앞에 붙여야 하는 파이썬 키워드는 무엇인가? (본문의 <code>screenLeftClick</code> 함수 등에서 r, g, b 변수를 사용할 때 등장함)
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong> global</p>
+      <p><strong>해설:</strong> 함수 안에서 함수 밖의 전역 변수를 수정하거나 사용하겠다고 명시할 때는 <code>global</code> 키워드를 사용합니다. 예: <code>global r, g, b</code></p>
+    </div>
+  </details>
+</div>
+
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[단답형]</span>
+    <span class='quiz-difficulty'>난이도: 중</span>
+  </div>
+  <h3>문제 5. 랜덤 정수 생성 함수</h3>
+  <div class='quiz-body'>
+    본문의 '기능 3 구현'에서 거북이의 크기를 1부터 9 사이의 임의의 정수로 설정하기 위해 사용된 <code>random</code> 모듈의 함수는 무엇인가?
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong> random.randrange()</p>
+      <p><strong>해설:</strong> 본문에서는 <code>tSize = random.randrange(1, 10)</code>을 사용하여 1 이상 10 미만(즉, 1~9)의 임의의 정수를 생성했습니다.</p>
+    </div>
+  </details>
+</div>
+
+<div class='quiz-item'>
+  <div class='quiz-header'>
+    <span class='quiz-type'>[코드 작성]</span>
+    <span class='quiz-difficulty'>난이도: 상</span>
+  </div>
+  <h3>문제 6. 마우스 오른쪽 버튼 클릭 기능 구현하기</h3>
+  <div class='quiz-body'>
+    본문의 '기능 2 구현' 계획에 따르면, 마우스 오른쪽 버튼을 클릭했을 때는 거북이가 선을 그리지 않고 클릭한 지점(x, y)으로 이동만 해야 합니다. 빈칸에 들어갈 알맞은 코드를 작성하여 함수를 완성하시오.
+    <br><br>
+    <code>
+    def screenRightClick(x, y) :<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;( 1 ) <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;( 2 )
+    </code>
+  </div>
+  <details>
+    <summary>정답 및 해설 확인하기</summary>
+    <div class='answer-box'>
+      <p><strong>정답:</strong><br>
+      (1) <code>turtle.penup()</code><br>
+      (2) <code>turtle.goto(x, y)</code>
+      </p>
+      <p><strong>해설:</strong> 선을 그리지 않고 이동하려면 펜을 들어야 하므로 <code>turtle.penup()</code>을 호출하고, 클릭한 좌표로 이동하기 위해 <code>turtle.goto(x, y)</code>를 사용합니다.</p>
+    </div>
+  </details>
+</div>
+<div style="text-align: center;"><a href="easy_explanation.html" class="btn-home">← 해설서로 돌아가기</a></div>
+</div>
+</body>
+</html>

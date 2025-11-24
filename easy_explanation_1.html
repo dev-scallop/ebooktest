@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECTION 05 터틀 그래픽 프로그램 작성 - 쉬운 해설서</title>
+
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #475569;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.75;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max_width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 28px;
+            background-color: var(--primary-color);
+            margin-right: 12px;
+            border-radius: 3px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.1rem;
+            color: var(--text-sub);
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        figure {
+            margin: 2.5rem 0;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        figcaption {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border-color);
+            margin: 4rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Quiz Styles */
+        details {
+            background: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-color);
+            list-style: none;
+        }
+        
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open] summary {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+<div class="container">
+<span class="badge">Easy Explanation Guide</span>
+<h1>SECTION 05 터틀 그래픽 프로그램 작성</h1>
+<h2>터틀 프로그램 기본 틀 만들기</h2>
+<p>자, 이제 5절로 들어왔어요. 이번에는 터틀 그래픽 프로그램을 본격적으로 작성해 볼 텐데요. 터틀 프로그램은 다른 프로그램보다 코드가 조금 긴 편이에요. 그래서 대충 작성하면 나중에 고치기가 아주 힘들답니다. 마치 방 청소를 안 해두면 나중에 물건 찾기가 힘든 것처럼요.</p>
+<p>그래서 앞으로 코드가 긴 프로그램을 짤 때는 체계적으로 세 부분으로 나누어 작성하는 습관을 들일 거예요.
+1.  <strong>함수 선언 부분</strong>
+2.  <strong>변수 선언 부분</strong>
+3.  <strong>메인(main) 코드 부분</strong></p>
+<p>이렇게 나누면 다른 사람이 내 코드를 볼 때도 이해하기 훨씬 쉬워져요.</p>
+<p>그리고 코드 중간중간에 <strong>주석(Remark)</strong>을 달아주면 좋아요. `#` 기호를 쓰면 그 줄은 프로그램이 실행하지 않고 설명으로만 인식해요. 여러 줄을 주석으로 만들고 싶다면 작은따옴표 3개(`'''`)로 내용을 감싸주면 됩니다.</p>
+<p>참고로, 코드가 너무 길어서 한 줄에 다 쓰기 힘들 때는 맨 뒤에 역슬래시(`\`)를 붙이면 다음 줄로 넘겨서 써도 파이썬이 "아, 이거 같은 줄이구나" 하고 인식해 줍니다.</p>
+<h3>변수의 선언에 대하여</h3>
+<p>잠깐, 여기서 변수 선언에 대해 짚고 넘어갈게요. C언어나 자바 같은 다른 언어를 배운 적이 있다면 "변수를 쓰려면 먼저 선언해야 한다"라고 알고 있을 거예요. 예를 들어 `int a;`라고 써서 "나 정수 담을 변수 a 쓸 거야!"라고 미리 말해줘야 하죠.</p>
+<p>하지만 파이썬은 훨씬 자유로워요. 그냥 `a = 100`이라고 적으면, 그 순간에 알아서 `a`라는 변수를 만들고 정수 100을 담아줍니다. 따로 선언할 필요가 없죠. 그렇지만 프로그램을 짤 때 "이 변수는 이런 값을 가질 거야"라고 미리 초깃값을 넣어두면(변수 선언 부분에서), 코드를 정리하는 데 도움이 된답니다.</p>
+<h3>각 부분의 역할</h3>
+<p>1.  <strong>함수 선언 부분</strong>: 프로그램에서 사용할 도구(함수)들을 미리 만들어두는 곳이에요. `print()`처럼 파이썬이 기본으로 주는 함수도 있지만, 내가 필요한 기능이 없다면 직접 만들어야겠죠? `def 함수명(매개변수):` 형식으로 만들고, 들여쓰기를 잘 지켜야 해요.
+2.  <strong>변수 선언 부분</strong>: 프로그램 전체에서 쓸 '전역 변수'들을 미리 준비하는 곳이에요. 여기서 변수들을 한눈에 볼 수 있게 해 주면 코드가 깔끔해져요.
+3.  <strong>메인(main) 코드 부분</strong>: 실제로 프로그램이 동작하는 본문이에요. 위에서 준비한 변수와 함수를 가져와서 화면에 결과를 보여주는 곳이죠.</p>
+<p>자, 그럼 거북이가 정사각형을 그리는 간단한 프로그램(`Code02-05.py`)을 먼저 볼까요?
+코드를 실행하면 거북이 모양(`turtle.shape`)을 한 펜이 앞으로 200만큼 갔다가(`forward`), 오른쪽으로 90도 돌고(`right`), 다시 가는 과정을 반복해서 사각형을 그려요.</p>
+<p>이 코드를 좀 더 세련되게, 그리고 반복되는 부분을 줄여서 수정할 수도 있어요. `Code02-06.py`를 보면 `for` 문을 사용해서 이동하고 회전하는 코드를 4번 반복하게 만들었죠. `for` 문은 나중에 6장에서 자세히 배울 거니까 지금은 "아, 이렇게 줄일 수 있구나" 정도만 보고 넘어가면 돼요.</p>
+<h2>구현할 기능 계획</h2>
+<p>지금부터 만들 프로그램은 사실 초보자에게 조금 어려울 수 있어요. 하지만 문법을 완벽히 몰라도 화면에 그림이 그려지는 걸 보면 훨씬 재미있게 공부할 수 있겠죠?</p>
+<p>우리는 마우스로 화면을 클릭하면 거북이가 반응하는 기능을 만들 거예요. 계획은 이렇습니다.
+1.  <strong>기능 1 (왼쪽 버튼 클릭)</strong>: 거북이가 클릭한 곳까지 선을 그리면서 따라옵니다. (색상은 랜덤!)
+2.  <strong>기능 2 (오른쪽 버튼 클릭)</strong>: 거북이가 선을 그리지 않고 클릭한 곳으로 이동만 합니다.
+3.  <strong>기능 3 (가운데 버튼 클릭)</strong>: 거북이의 크기가 랜덤하게 커지거나 작아집니다.</p>
+<h2>필요한 변수 준비</h2>
+<p>먼저 필요한 변수들을 준비해 볼까요?
+*   선의 두께를 담을 `pSize`
+*   거북이의 크기를 담을 `tSize`
+*   색상을 표현할 빨강(`r`), 초록(`g`), 파랑(`b`) 변수</p>
+<p>이렇게 변수들을 미리 만들어 둡니다.</p>
+<h2>기능 1 구현 (왼쪽 클릭)</h2>
+<p>마우스 왼쪽 버튼을 눌렀을 때 작동할 `screenLeftClick(x, y)` 함수를 만들어 봅시다.
+이 함수 안에는 다음과 같은 내용이 들어갑니다.
+1.  `global`을 이용해 색상 변수(`r`, `g`, `b`)를 가져옵니다.
+2.  `turtle.pencolor()`로 펜 색상을 설정합니다.
+3.  `turtle.pendown()`으로 펜을 바닥에 내립니다. (그래야 선이 그려지겠죠?)
+4.  `turtle.goto(x, y)`로 클릭한 좌표 `(x, y)`까지 이동합니다.</p>
+<h2>기능 2 구현 (오른쪽 클릭)</h2>
+<p>이번엔 오른쪽 버튼용 `screenRightClick(x, y)` 함수입니다.
+이건 아주 간단해요.
+1.  `turtle.penup()`으로 펜을 들어 올립니다. (선이 그려지면 안 되니까요.)
+2.  `turtle.goto(x, y)`로 클릭한 곳으로 이동합니다.</p>
+<h2>기능 3 구현 (가운데 클릭)</h2>
+<p>마지막으로 가운데 버튼용 `screenMidClick(x, y)` 함수입니다. 거북이 크기와 색상을 무작위로 바꿀 거예요.
+1.  `random.randrange(1, 10)`을 사용해 1부터 9 사이의 숫자를 뽑아 거북이 크기(`tSize`)로 정합니다.
+2.  `turtle.shapesize()`로 거북이 크기를 바꿉니다.
+3.  `random.random()`을 사용해 `r`, `g`, `b` 색상 값을 0에서 1 사이의 임의의 실수로 뽑습니다. 이렇게 뽑은 색상은 나중에 왼쪽 클릭을 할 때 선 색깔로 쓰이게 됩니다.</p>
+<h2>터틀 그래픽 프로그램 완성</h2>
+<p>이제 위에서 만든 함수 조각들을 하나로 합쳐서 완성된 코드(`Code02-07.py`)를 만들어 봅시다.
+메인 코드 부분에서 몇 가지 새로운 함수들이 등장하는데요, 표 2-1을 참고해서 설명해 드릴게요.</p>
+<p>*   `turtle.title('제목')`: 윈도창의 제목을 붙여줍니다.
+*   `turtle.pensize(두께)`: 그려질 선의 두께를 정합니다.
+*   `turtle.onscreenclick(함수명, 번호)`: 이게 핵심입니다! 화면을 클릭했을 때 어떤 함수를 실행할지 연결해 주는 역할을 해요. 번호 1은 왼쪽, 2는 가운데, 3은 오른쪽 버튼을 의미합니다.</p>
+<p>예를 들어 `turtle.onscreenclick(screenLeftClick, 1)`이라고 쓰면, "마우스 왼쪽 버튼(1)을 누르면 `screenLeftClick` 함수를 실행해라"라는 뜻이 됩니다.</p>
+<p>이 프로그램은 지금 당장 100% 이해하기엔 조금 어려울 수 있어요. 책에서도 이 정도 수준은 중반까지 공부해야 짤 수 있다고 해요. 하지만 미리 "와, 파이썬으로 이런 것도 되는구나!" 하고 체험해 보는 것이 목표니까, 코드를 따라서 입력해 보고 실행되는 모습을 즐겨보세요.</p>
+<p><strong>SELF STUDY 2-1</strong>
+여유가 된다면, 마우스 왼쪽 버튼 기능과 가운데 버튼 기능을 합쳐보세요. 왼쪽 버튼만 눌러도 색상과 크기가 바뀌면서 선이 그려지도록 코드를 수정해 보는 것도 좋은 연습이 될 거예요.</p>
+<hr>
+<h2>부록: 전체 도식 모음</h2>
+<p>도식·표가 없습니다.</p>
+</div>
+</body>
+</html>
