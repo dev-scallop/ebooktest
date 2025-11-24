@@ -4,71 +4,39 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>전자책 뷰어 — PDF + 해설 + 연습문제</title>
-    (function(){
-      let cozeClient = null;
-      const BOT_ID = '7576395788172050485';
+  <style>
+    :root{--bg:#f3f4f6;--card:#fff;--accent:#2563eb}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans KR',sans-serif;background:var(--bg);color:#0f172a}
+    .wrap{max-width:calc(100% - 32px);margin:8px 16px;height:calc(100vh - 32px);display:flex;gap:12px}
+    .panel{background:var(--card);border-radius:10px;box-shadow:0 6px 18px rgba(10,10,10,0.06);overflow:hidden;display:flex;flex-direction:column}
+    .left{flex:0 0 60%;min-width:360px}
+    .right{flex:0 0 40%;min-width:280px}
+    .toolbar{padding:12px 16px;border-bottom:1px solid #e6eef7;background:linear-gradient(90deg,#fff,rgba(37,99,235,0.02));display:flex;align-items:center;gap:10px}
+    .title{font-weight:700}
+    .pdf-frame{flex:1;border:0;width:100%;height:100%;overflow:auto}
+    .right-content{padding:14px;overflow:auto;height:100%}
+    .hint{font-size:0.9rem;color:#475569}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600;border:0;cursor:pointer}
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+    .modal{background:#fff;max-width:980px;width:100%;max-height:90vh;border-radius:12px;overflow:auto;box-shadow:0 20px 50px rgba(2,6,23,0.35)}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #eef2ff}
+    .modal-body{padding:16px}
+    .close-btn{background:#ef4444;color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
 
-      async function fetchToken(){
-        try{
-          const r = await fetch('/api/coze-token');
-          if(!r.ok) throw new Error('Token fetch failed: ' + r.status);
-          const token = await r.text();
-          return token;
-        }catch(e){
-          console.warn('Failed to fetch Coze token from server', e);
-          throw e;
-        }
-      }
-
-      async function initCozeIfNeeded(){
-        if(cozeClient) return;
-        try{
-          // obtain a token from serverless endpoint and pass an onRefreshToken that fetches again when needed
-          const initialToken = await fetchToken();
-          cozeClient = new CozeWebSDK.WebChatClient({
-            config:{ bot_id: BOT_ID },
-            componentProps:{ title:'Coze', mountElement: document.getElementById('coze-chat-anchor') },
-            auth:{ type:'token', token: initialToken,
-              onRefreshToken: async function(){
-                return await fetchToken();
-              }
-            }
-          });
-        }catch(e){ console.warn('Coze init failed', e); }
-      }
-
-      const toggleBtn = document.getElementById('coze-toggle-btn');
-      const anchor = document.getElementById('coze-chat-anchor');
-      const closeBtn = anchor.querySelector('.coze-close');
-
-      toggleBtn.addEventListener('click', async ()=>{
-        // initialize on first open (get token from serverless endpoint)
-        await initCozeIfNeeded();
-        anchor.classList.add('coze-open');
-        anchor.setAttribute('aria-hidden','false');
-        toggleBtn.style.display = 'none';
-      });
-      closeBtn.addEventListener('click', ()=>{
-        anchor.classList.remove('coze-open');
-        anchor.setAttribute('aria-hidden','true');
-        toggleBtn.style.display = 'flex';
-      });
-    })();
-      scrollbar-width:none; -ms-overflow-style:none
-    }
+    /* Auto-hide scrollbars applied to main containers */
+    html.auto-hide-scroll, body.auto-hide-scroll,
+    .wrap.auto-hide-scroll, .panel.auto-hide-scroll,
+    .right-content.auto-hide-scroll, #pdfContainer.auto-hide-scroll,
+    .modal.auto-hide-scroll, iframe.auto-hide-scroll{scrollbar-width:none; -ms-overflow-style:none}
     html.auto-hide-scroll::-webkit-scrollbar, body.auto-hide-scroll::-webkit-scrollbar,
     .wrap.auto-hide-scroll::-webkit-scrollbar, .panel.auto-hide-scroll::-webkit-scrollbar,
     .right-content.auto-hide-scroll::-webkit-scrollbar, #pdfContainer.auto-hide-scroll::-webkit-scrollbar,
-    .modal.auto-hide-scroll::-webkit-scrollbar, iframe.auto-hide-scroll::-webkit-scrollbar{
-      width:8px;background:transparent
-    }
+    .modal.auto-hide-scroll::-webkit-scrollbar, iframe.auto-hide-scroll::-webkit-scrollbar{width:8px;background:transparent}
     html.auto-hide-scroll::-webkit-scrollbar-thumb, body.auto-hide-scroll::-webkit-scrollbar-thumb,
     .wrap.auto-hide-scroll::-webkit-scrollbar-thumb, .panel.auto-hide-scroll::-webkit-scrollbar-thumb,
     .right-content.auto-hide-scroll::-webkit-scrollbar-thumb, #pdfContainer.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll::-webkit-scrollbar-thumb, iframe.auto-hide-scroll::-webkit-scrollbar-thumb{
-      background:rgba(99,102,241,0);border-radius:8px;transition:background .18s
-    }
-    /* show thumb on hover or when JS adds .show-scroll */
+    .modal.auto-hide-scroll::-webkit-scrollbar-thumb, iframe.auto-hide-scroll::-webkit-scrollbar-thumb{background:rgba(99,102,241,0);border-radius:8px;transition:background .18s}
     html.auto-hide-scroll:hover::-webkit-scrollbar-thumb, body.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
     .wrap.auto-hide-scroll:hover::-webkit-scrollbar-thumb, .panel.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
     .right-content.auto-hide-scroll:hover::-webkit-scrollbar-thumb, #pdfContainer.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
@@ -76,58 +44,27 @@
     html.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb, body.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
     .wrap.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb, .panel.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
     .right-content.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb, #pdfContainer.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb, iframe.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb{
-      background:rgba(99,102,241,0.45)
-    }
-    /* Firefox: show thin scrollbar on hover */
-    html.auto-hide-scroll:hover, body.auto-hide-scroll:hover,
-    .wrap.auto-hide-scroll:hover, .panel.auto-hide-scroll:hover,
-    .right-content.auto-hide-scroll:hover, #pdfContainer.auto-hide-scroll:hover,
-    .modal.auto-hide-scroll:hover, iframe.auto-hide-scroll:hover{
-      scrollbar-width:thin;scrollbar-color:rgba(99,102,241,0.45) transparent
-    }
+    .modal.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb, iframe.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.45)}
+    @media (max-width:900px){.wrap{flex-direction:column;height:auto}.left,.right{flex:unset;width:100%}.right{order:2}.left{order:1}.pdf-frame{height:60vh}.right-content{height:40vh}}
 
-    @media (max-width:900px){
-      .wrap{flex-direction:column;height:auto}
-      .left,.right{flex:unset;width:100%}
-      .right{order:2}
-      .left{order:1}
-      .pdf-frame{height:60vh}
-      .right-content{height:40vh}
-    }
-      /* Coze chat: default show small floating button; expand chat only when opened */
-      #coze-toggle-btn{position:fixed;right:20px;bottom:20px;z-index:1201;width:56px;height:56px;border-radius:50%;background:#5b21b6;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(2,6,23,0.18);cursor:pointer;font-size:24px;border:0}
-      #coze-toggle-btn:hover{transform:translateY(-2px)}
-      /* hidden anchor (chat container) - only visible when .coze-open added */
-      #coze-chat-anchor{display:none}
-      #coze-chat-anchor.coze-open{position:fixed;right:20px;bottom:20px;z-index:1200;width:360px;height:560px;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.18);display:block;background:#fff}
-      #coze-chat-anchor.coze-open .coze-close{position:absolute;right:8px;top:8px;z-index:1210;background:transparent;border:0;color:#374151;font-size:20px;cursor:pointer}
+    /* Coze chat: floating toggle and hidden anchor */
+    #coze-toggle-btn{position:fixed;right:20px;bottom:20px;z-index:1201;width:56px;height:56px;border-radius:50%;background:#5b21b6;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(2,6,23,0.18);cursor:pointer;font-size:24px;border:0}
+    #coze-toggle-btn:hover{transform:translateY(-2px)}
+    #coze-chat-anchor{display:none}
+    #coze-chat-anchor.coze-open{position:fixed;right:20px;bottom:20px;z-index:1200;width:360px;height:560px;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.18);display:block;background:#fff}
+    #coze-chat-anchor.coze-open .coze-close{position:absolute;right:8px;top:8px;z-index:1210;background:transparent;border:0;color:#374151;font-size:20px;cursor:pointer}
     @media (max-width:700px){#coze-toggle-btn{right:12px;bottom:12px}#coze-chat-anchor.coze-open{right:12px;bottom:12px;width:300px;height:480px}}
-
     /* Reserve space so floating chat button doesn't cover right-hand content */
-    /* Add bottom gap equal to chat button height + margin */
     .right{padding-bottom:96px}
     @media (max-width:900px){ .right{padding-bottom:76px} }
   </style>
   <script>
     // helper to encode local pdf path safely
     function fileUrlFromPath(p){
-      // If starts with file:// already, return encoded version
       if(p.startsWith('file:')) return p;
-      // convert Windows path to file URL
       let path = p.replace(/\\/g, '/');
-      if(!path.startsWith('/')){
-        path = '/' + path;
-      }
+      if(!path.startsWith('/')) path = '/' + path;
       return 'file://' + encodeURI(path);
-    }
-  </script>
-  <!-- PDF.js (cdn) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script>
-    // configure worker
-    if(window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
     }
   </script>
 </head>
@@ -201,37 +138,13 @@
           pdfUrl = new URL(pdfRawPath, location.href).href;
         }
         console.info('Loading PDF from', pdfUrl);
-        // Render PDF using PDF.js so we can control scrolling and sync with the explanation pane.
-        async function renderPdf(url){
-          pdfContainer.innerHTML = '<div style="padding:12px;color:#64748b">PDF 렌더링 중...</div>';
-          try{
-            const loadingTask = pdfjsLib.getDocument(url);
-            const pdf = await loadingTask.promise;
-            pdfContainer.innerHTML = '';
-            for(let p=1;p<=pdf.numPages;p++){
-              const page = await pdf.getPage(p);
-              const baseViewport = page.getViewport({scale:1});
-              const containerW = Math.max(320, pdfContainer.clientWidth || 800);
-              const scale = (containerW - 24) / baseViewport.width;
-              const viewport = page.getViewport({scale: Math.max(0.6, scale)});
-              const canvas = document.createElement('canvas');
-              canvas.width = Math.floor(viewport.width);
-              canvas.height = Math.floor(viewport.height);
-              canvas.style.display = 'block';
-              canvas.style.margin = '12px auto';
-              const ctx = canvas.getContext('2d');
-              await page.render({canvasContext:ctx, viewport}).promise;
-              pdfContainer.appendChild(canvas);
-            }
-            // attach scroll handler for syncing and quiz trigger
-            pdfContainer.addEventListener('scroll', onPdfScroll, {passive:true});
-          }catch(err){
-            pdfContainer.innerHTML = '<p>PDF 렌더링 실패: 파일을 확인하세요.</p>';
-            console.error(err);
-          }
-        }
-        // kick off render
-        renderPdf(pdfUrl);
+        // Insert iframe + object fallback so browser's PDF viewer is used (no PDF.js rendering)
+        const esc = (s)=> s.replace(/"/g,'\"');
+        pdfContainer.innerHTML = '' +
+          '<iframe src="'+esc(pdfUrl)+'" style="width:100%;height:100%;border:0"></iframe>' +
+          '<object data="'+esc(pdfUrl)+'" type="application/pdf" style="width:100%;height:100%;border:0">' +
+            '<p>PDF를 보려면 <a href="'+esc(pdfUrl)+'" target="_blank">여기를 클릭하여 새 탭에서 열기</a> 하십시오.</p>' +
+          '</object>';
       } catch(e){
         pdfContainer.innerHTML = '<p>PDF 로드 실패: 파일 경로를 확인하세요.</p>';
         console.error(e);
@@ -324,21 +237,7 @@
   // mark explain iframe element (note: cannot control iframe internal content scrollbars if cross-origin)
   if(explainFrame){ explainFrame.classList.add('auto-hide-scroll'); setupAutoHideScroll(explainFrame); }
 
-      // PDF scroll -> right explanation sync handler
-      function onPdfScroll(){
-        try{
-          const sc = pdfContainer;
-          const denom = (sc.scrollHeight - sc.clientHeight) || 1;
-          const ratio = Math.max(0, Math.min(1, sc.scrollTop / denom));
-          // set right content scroll proportionally (allow programmatic scroll even if scrollbar hidden)
-          rightContent.scrollTop = ratio * ((rightContent.scrollHeight - rightContent.clientHeight) || 0);
-          // if left reached bottom, open quiz
-          if(!triggered && sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 10){
-            triggered = true;
-            setTimeout(()=> openModal(), 600);
-          }
-        }catch(e){ console.warn('onPdfScroll error', e); }
-      }
+      // Note: using browser PDF viewer (iframe/object) — scroll sync with iframe content is not reliable across browsers.
 
       // 踰꾪듉: ?댁꽕濡??ъ빱??
       document.getElementById('openExplanation').addEventListener('click', ()=>{
@@ -364,15 +263,23 @@
     (function(){
       let cozeClient = null;
       const BOT_ID = '7576395788172050485';
-      const TOKEN = 'pat_ZLQnuC8djEQB4OY4dan3wJnpLt5VWFW42KIigBMw3OFvF3f7kbB9QV42UuNbA1q4'; // replace with real token or use server-side injection
 
-      function initCozeIfNeeded(){
+      async function fetchToken(){
+        try{
+          const r = await fetch('/api/coze-token');
+          if(!r.ok) throw new Error('Token fetch failed: ' + r.status);
+          return await r.text();
+        }catch(e){ console.warn('Failed to fetch Coze token from server', e); throw e; }
+      }
+
+      async function initCozeIfNeeded(){
         if(cozeClient) return;
         try{
+          const initialToken = await fetchToken();
           cozeClient = new CozeWebSDK.WebChatClient({
             config:{ bot_id: BOT_ID },
             componentProps:{ title:'Coze', mountElement: document.getElementById('coze-chat-anchor') },
-            auth:{ type:'token', token: TOKEN, onRefreshToken: function(){ return TOKEN } }
+            auth:{ type:'token', token: initialToken, onRefreshToken: async function(){ return await fetchToken(); } }
           });
         }catch(e){ console.warn('Coze init failed', e); }
       }
@@ -381,9 +288,8 @@
       const anchor = document.getElementById('coze-chat-anchor');
       const closeBtn = anchor.querySelector('.coze-close');
 
-      toggleBtn.addEventListener('click', ()=>{
-        // initialize on first open
-        initCozeIfNeeded();
+      toggleBtn.addEventListener('click', async ()=>{
+        await initCozeIfNeeded();
         anchor.classList.add('coze-open');
         anchor.setAttribute('aria-hidden','false');
         toggleBtn.style.display = 'none';
