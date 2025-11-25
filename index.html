@@ -90,6 +90,9 @@
           <div class="title">쉬운 해설</div>
           <div class="hint">오른쪽 영역을 끝까지 스크롤하면 연습문제가 팝업으로 열립니다.</div>
         </div>
+        <div>
+          <button id="openQuizBtn" class="btn">연습문제 열기</button>
+        </div>
       </div>
       <div id="rightContent" class="right-content">
         <!-- 설명 페이지를 원형 그대로 보존하려면 iframe으로 불러옵니다. -->
@@ -185,6 +188,9 @@
 
       // manual open button fallback
       openQuizManual.addEventListener('click', ()=> openModal());
+  // toolbar quiz button (explicit open)
+  const openQuizBtn = document.getElementById('openQuizBtn');
+  if(openQuizBtn){ openQuizBtn.addEventListener('click', ()=> openModal()); }
 
       // === ?곗뒿臾몄젣 紐⑤떖 以鍮?===
       const modalBackdrop = document.getElementById('modalBackdrop');
