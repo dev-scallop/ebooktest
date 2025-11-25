@@ -167,608 +167,102 @@
     }
 
     .message.user {
-      align-self: flex-end;
-      background: #2563eb;
-      color: #fff;
-      border-bottom-right-radius: 4px;
+      div.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop=chatMessages.scrollHeight;
     }
 
-    .message.bot {
-      align-self: flex-start;
-      background: #fff;
-      color: #334155;
-      border: 1px solid #e2e8f0;
-      border-bottom-left-radius: 4px;
+    function removeLoading() {
+      const el=document.getElementById('typingIndicator');
+      if (el) el.remove();
     }
 
-    /* Markdown-like styles for bot messages */
-    .message.bot strong {
-      font-weight: 700;
-      color: #0f172a;
-    }
+    async function sendMessage() {
+      const query=chatInput.value.trim();
+      if ( !query) return;
 
-    .message.bot ul {
-      padding-left: 20px;
-      margin: 8px 0;
-    }
+      // 1. User message
+      appendMessage('user', query);
+      chatInput.value='';
+      chatInput.disabled=true;
+      chatSendBtn.disabled=true;
 
-    .message.bot li {
-      margin-bottom: 4px;
-    }
-
-    .chat-input-area {
-      padding: 16px 20px;
-      background: #fff;
-      border-top: 1px solid #f1f5f9;
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-      flex-shrink: 0;
-    }
-
-    .chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1px solid #cbd5e1;
-      border-radius: 24px;
-      font-size: 0.95rem;
-      outline: none;
-      resize: none;
-      height: 48px;
-      /* Initial height */
-      max-height: 120px;
-      line-height: 1.5;
-      background: #f8fafc;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    .chat-input:focus {
-      background: #fff;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .chat-send-btn {
-      width: 48px;
-      height: 48px;
-      background: #2563eb;
-      color: #fff;
-      border: 0;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    }
-
-    .chat-send-btn:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-    }
-
-    .chat-send-btn:active {
-      transform: translateY(0);
-    }
-
-    .chat-send-btn:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    /* Loading indicator */
-    .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 12px 16px;
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      border-bottom-left-radius: 4px;
-      align-self: flex-start;
-      width: fit-content;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    .typing-dot {
-      width: 6px;
-      height: 6px;
-      background: #94a3b8;
-      border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
-    }
-
-    .typing-dot:nth-child(1) {
-      animation-delay: -0.32s;
-    }
-
-    .typing-dot:nth-child(2) {
-      animation-delay: -0.16s;
-    }
-
-    @keyframes bounce {
-
-      0%,
-      80%,
-      100% {
-        transform: scale(0);
-      }
-
-      40% {
-        transform: scale(1);
-      }
-    }
-
-    .hint {
-      font-size: 0.9rem;
-      color: #475569
-    }
-
-    .btn {
-      background: var(--accent);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      border: 0;
-      cursor: pointer
-    }
-
-    /* modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 50
-    }
-
-    .modal {
-      background: #fff;
-      max-width: 980px;
-      width: 100%;
-      max-height: 90vh;
-      border-radius: 12px;
-      overflow: auto;
-      box-shadow: 0 20px 50px rgba(2, 6, 23, 0.35)
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid #eef2ff
-    }
-
-    .modal-body {
-      padding: 16px
-    }
-
-    .close-btn {
-      background: #ef4444;
-      color: #fff;
-      border: 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* Auto-hide scrollbars applied to main containers (excluding right panel) */
-    html.auto-hide-scroll,
-    body.auto-hide-scroll,
-    .wrap.auto-hide-scroll,
-    .panel.left.auto-hide-scroll,
-    #pdfContainer.auto-hide-scroll,
-    .modal.auto-hide-scroll {
-      scrollbar-width: none;
-      -ms-overflow-style: none
-    }
-
-    html.auto-hide-scroll::-webkit-scrollbar,
-    body.auto-hide-scroll::-webkit-scrollbar,
-    .wrap.auto-hide-scroll::-webkit-scrollbar,
-    .panel.left.auto-hide-scroll::-webkit-scrollbar,
-    #pdfContainer.auto-hide-scroll::-webkit-scrollbar,
-    .modal.auto-hide-scroll::-webkit-scrollbar {
-      width: 8px;
-      background: transparent
-    }
-
-    html.auto-hide-scroll::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .panel.left.auto-hide-scroll::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll::-webkit-scrollbar-thumb {
-      background: rgba(99, 102, 241, 0);
-      border-radius: 8px;
-      transition: background .18s
-    }
-
-    html.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .panel.left.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    html.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .panel.left.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb {
-      background: rgba(99, 102, 241, 0.45)
-    }
-
-    @media (max-width:900px) {
-      .wrap {
-        flex-direction: column;
-        height: auto
-      }
-
-      .left,
-      .right {
-        flex: unset;
-        width: 100%
-      }
-
-      .right {
-        order: 2
-      }
-
-      .left {
-        order: 1
-      }
-
-      .pdf-frame {
-        height: 60vh
-      }
-
-      .right-content {
-        height: 40vh
-      }
-    }
-  </style>
-  <script>
-    // helper to encode local pdf path safely
-    function fileUrlFromPath(p) {
-      if (p.startsWith('file:')) return p;
-      let path = p.replace(/\\/g, '/');
-      if (!path.startsWith('/')) path = '/' + path;
-      return 'file://' + encodeURI(path);
-    }
-  </script>
-</head>
-
-<body>
-  <div class="wrap">
-    <section class="panel left">
-      <div class="toolbar">
-        <div style="flex:1">
-          <div class="title">PDF 본문</div>
-          <div class="hint">왼쪽에서 PDF 본문을 확인하세요.</div>
-        </div>
-        <div>
-          <button id="openExplanation" class="btn">해설로 포커스</button>
-        </div>
-      </div>
-      <!-- PDF 영역: JS에서 동적으로 iframe + object(fallback)를 넣습니다 -->
-      <div id="pdfContainer" class="pdf-frame">Loading PDF...</div>
-    </section>
-
-    <aside class="panel right">
-      <!-- Top: Explanation -->
-      <div class="toolbar">
-        <div style="flex:1">
-          <div class="title">쉬운 해설</div>
-          <div class="hint">오른쪽 영역을 끝까지 스크롤하면 연습문제가 팝업으로 열립니다.</div>
-        </div>
-        <div>
-          <button id="openQuizBtn" class="btn">연습문제 열기</button>
-        </div>
-      </div>
-      <div id="rightContent" class="right-content">
-        <!-- 설명 페이지를 원형 그대로 보존하려면 iframe으로 불러옵니다. -->
-        <iframe id="explainFrame" src="" title="쉬운 해설" style="width:100%;height:100%;border:0"></iframe>
-        <!-- fallback manual open button (보안정책으로 스크립트 접근이 불가능한 경우 표시) -->
-        <div id="explainFallback" style="display:none;padding:12px;text-align:center;">
-          <p style="color:#64748b">해설 자동 감지가 불가능합니다. 아래 버튼을 눌러 연습문제를 직접 열어보세요.</p>
-          <button id="openQuizManual" class="btn">연습문제 열기</button>
-        </div>
-      </div>
-
-      <!-- Bottom: Chatbot -->
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="chat-header-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </div>
-          <div class="chat-header-text">
-            <span class="chat-title">AI 튜터</span>
-            <span class="chat-subtitle">무엇이든 물어보세요</span>
-          </div>
-        </div>
-        <div id="chatMessages" class="chat-messages">
-          <div class="message bot">
-            안녕하세요! 학습 중 궁금한 점이 있다면 언제든 물어보세요.
-          </div>
-        </div>
-        <div class="chat-input-area">
-          <textarea id="chatInput" class="chat-input" placeholder="질문을 입력하세요..." rows="1"></textarea>
-          <button id="chatSendBtn" class="chat-send-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- modal for practice quiz -->
-  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="modal-header">
-        <strong>연습문제</strong>
-        <div>
-          <button id="closeModal" class="close-btn">닫기</button>
-        </div>
-      </div>
-      <div id="modalBody" class="modal-body">로딩 중...</div>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      // === 설정 섹션 ===
-      // 1) PDF 파일 경로
-      const pdfRawPath = '(10가지 핵심이론으로 만나는) 지속가능경영과 ESG-part-2.pdf';
-      // 2) 해설 및 연습문제 파일
-      const explanationPath = 'easy_explanation.html';
-      const quizPath = 'practice_quiz.html';
-
-      // === PDF 로드 ===
-      const pdfContainer = document.getElementById('pdfContainer');
-      try {
-        let pdfUrl;
-        if (pdfRawPath.startsWith('http:') || pdfRawPath.startsWith('https:') || pdfRawPath.startsWith('file:')) {
-          pdfUrl = pdfRawPath;
-        } else {
-          pdfUrl = new URL(pdfRawPath, location.href).href;
-        }
-        console.info('Loading PDF from', pdfUrl);
-        const esc = (s) => s.replace(/"/g, '\"');
-        pdfContainer.innerHTML = '' +
-          '<iframe src="' + esc(pdfUrl) + '" style="width:100%;height:100%;border:0"></iframe>' +
-          '<object data="' + esc(pdfUrl) + '" type="application/pdf" style="width:100%;height:100%;border:0">' +
-          '<p>PDF를 보려면 <a href="' + esc(pdfUrl) + '" target="_blank">여기를 클릭하여 새 탭에서 열기</a> 하십시오.</p>' +
-          '</object>';
-      } catch (e) {
-        pdfContainer.innerHTML = '<p>PDF 로드 실패: 파일 경로를 확인하세요.</p>';
-        console.error(e);
-      }
-      // === 쉬운 해설(iframe 로드) 및 스크롤 감지 ===
-      const explainFrame = document.getElementById('explainFrame');
-      const explainFallback = document.getElementById('explainFallback');
-      const openQuizManual = document.getElementById('openQuizManual');
-      const rightContent = document.getElementById('rightContent');
-      explainFrame.src = explanationPath;
-
-      function attachExplainScrollHandler() {
-        try {
-          const doc = explainFrame.contentDocument || explainFrame.contentWindow.document;
-          const scEl = doc.scrollingElement || doc.documentElement || doc.body;
-          doc.querySelectorAll && doc.querySelectorAll('a').forEach(a => a.setAttribute('target', '_blank'));
-          scEl.addEventListener('scroll', () => {
-            if (scEl.scrollTop + scEl.clientHeight >= scEl.scrollHeight - 10) {
-              if (!triggered) {
-                triggered = true;
-                setTimeout(() => openModal(), 600);
-              }
-            }
-          });
-          explainFallback.style.display = 'none';
-          return true;
-        } catch (e) {
-          explainFallback.style.display = 'block';
-          console.warn('Could not attach scroll handler to explain iframe (cross-origin or file protocol).', e);
-          return false;
-        }
-      }
-
-      explainFrame.addEventListener('load', () => {
-        attachExplainScrollHandler();
-      });
-
-      openQuizManual.addEventListener('click', () => openModal());
-      const openQuizBtn = document.getElementById('openQuizBtn');
-      if (openQuizBtn) {
-        openQuizBtn.addEventListener('click', () => openModal());
-      }
-
-      // === 연습문제 모달 ===
-      const modalBackdrop = document.getElementById('modalBackdrop');
-      const modalBody = document.getElementById('modalBody');
-      const closeModal = document.getElementById('closeModal');
-      let quizLoaded = false;
-
-      function openModal() {
-        if (!quizLoaded) {
-          modalBody.innerHTML = '<iframe id="quizFrame" src="' + encodeURI(quizPath) + '" style="width:100%;height:70vh;border:0"></iframe>';
-          quizLoaded = true;
-          const qf = document.getElementById('quizFrame');
-          if (qf) {
-            qf.classList.add('auto-hide-scroll');
-            setupAutoHideScroll(qf);
-          }
-        }
-        modalBackdrop.style.display = 'flex';
-      }
-      closeModal.addEventListener('click', () => modalBackdrop.style.display = 'none');
-      modalBackdrop.addEventListener('click', (e) => {
-        if (e.target === modalBackdrop) modalBackdrop.style.display = 'none';
-      });
-
-      let triggered = false;
-
-      function setupAutoHideScroll(el) {
-        if (!el) return;
-        let t = null;
-        el.classList.add('auto-hide-scroll');
-        el.addEventListener('scroll', () => {
-          el.classList.add('show-scroll');
-          clearTimeout(t);
-          t = setTimeout(() => el.classList.remove('show-scroll'), 700);
-        }, {
-          passive: true
-        });
-        el.addEventListener('mouseenter', () => el.classList.add('show-scroll'));
-        el.addEventListener('mouseleave', () => el.classList.remove('show-scroll'));
-      }
-
-      setupAutoHideScroll(pdfContainer);
+      // 2. Loading
+      appendLoading();
 
       try {
-        setupAutoHideScroll(document.documentElement);
-      } catch (e) { }
+
+        // 3. Call Serverless Function
+        const res=await fetch('/api/coze-chat', {
+
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+
+          ,
+          body: JSON.stringify({
+            query: query,
+            conversation_id: 'web_session_' + Date.now() // Simple session ID
+          })
+      });
+
+    removeLoading();
+
+    if ( !res.ok) {
+      // Try to parse error details
+      let errorMsg='Server error: '+res.status;
+
       try {
-        setupAutoHideScroll(document.body);
-      } catch (e) { }
-      const modalEl = document.querySelector('.modal');
-      if (modalEl) setupAutoHideScroll(modalEl);
-      if (explainFrame) {
-        explainFrame.classList.add('auto-hide-scroll');
-        setupAutoHideScroll(explainFrame);
+        const errData=await res.json();
+        if (errData.error) errorMsg=errData.error;
       }
 
-      document.getElementById('openExplanation').addEventListener('click', () => {
-        rightContent.scrollTop = 0;
-        rightContent.focus();
-      });
+      catch (e) {}
 
-      window.addEventListener('error', (ev) => {
-        console.warn('Page error', ev.error);
-      });
-    })();
-  </script>
+      throw new Error(errorMsg);
+    }
 
-  <!-- Chatbot Logic -->
-  <script>
-    (function () {
-      const chatInput = document.getElementById('chatInput');
-      const chatSendBtn = document.getElementById('chatSendBtn');
-      const chatMessages = document.getElementById('chatMessages');
+    const data=await res.json();
 
-      function appendMessage(role, text) {
-        const div = document.createElement('div');
-        div.className = 'message ' + role;
-        // Basic markdown-like parsing for bold text
-        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        div.innerHTML = formattedText;
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Parse Coze response to find the answer
+    let answer="죄송합니다. 답변을 가져올 수 없습니다.";
+
+    if (Array.isArray(data.messages)) {
+      const answerMsg=data.messages.find(m=> m.role==='assistant' && m.type==='answer');
+
+      if (answerMsg && answerMsg.content) {
+        answer=answerMsg.content;
       }
+    }
 
-      function appendLoading() {
-        const div = document.createElement('div');
-        div.className = 'typing-indicator';
-        div.id = 'typingIndicator';
-        div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
+    else if (data.error) {
+      answer="오류 발생: "+data.error;
+    }
 
-      function removeLoading() {
-        const el = document.getElementById('typingIndicator');
-        if (el) el.remove();
-      }
+    appendMessage('bot', answer);
 
-      async function sendMessage() {
-        const query = chatInput.value.trim();
-        if (!query) return;
+    }
 
-        // 1. User message
-        appendMessage('user', query);
-        chatInput.value = '';
-        chatInput.disabled = true;
-        chatSendBtn.disabled = true;
+    catch (e) {
+      removeLoading();
+      appendMessage('bot', '오류가 발생했습니다: ' + e.message);
+    }
 
-        // 2. Loading
-        appendLoading();
+    finally {
+      chatInput.disabled=false;
+      chatSendBtn.disabled=false;
+      chatInput.focus();
+    }
+    }
 
-        try {
-          // 3. Call Serverless Function
-          const res = await fetch('/api/coze-chat', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              query: query,
-              conversation_id: 'web_session_' + Date.now() // Simple session ID
-            })
-          });
+    chatSendBtn.addEventListener('click', sendMessage);
 
-          removeLoading();
-
-          if (!res.ok) {
-            // Try to parse error details
-            let errorMsg = 'Server error: ' + res.status;
-            try {
-              const errData = await res.json();
-              if (errData.error) errorMsg = errData.error;
-            } catch (e) { }
-            throw new Error(errorMsg);
-          }
-
-          const data = await res.json();
-
-          // Parse Coze response to find the answer
-          let answer = "죄송합니다. 답변을 가져올 수 없습니다.";
-          if (Array.isArray(data.messages)) {
-            const answerMsg = data.messages.find(m => m.role === 'assistant' && m.type === 'answer');
-            if (answerMsg && answerMsg.content) {
-              answer = answerMsg.content;
-            }
-          } else if (data.error) {
-            answer = "오류 발생: " + data.error;
-          }
-
-          appendMessage('bot', answer);
-
-        } catch (e) {
-          removeLoading();
-          appendMessage('bot', '오류가 발생했습니다: ' + e.message);
-        } finally {
-          chatInput.disabled = false;
-          chatSendBtn.disabled = false;
-          chatInput.focus();
-        }
-      }
-
-      chatSendBtn.addEventListener('click', sendMessage);
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+    chatInput.addEventListener('keypress', (e)=> {
+        if (e.key==='Enter' && !e.shiftKey) {
           e.preventDefault();
           sendMessage();
         }
       });
     })();
-  </script>
-</body>
-
-</html>
+    </script></body></html>
