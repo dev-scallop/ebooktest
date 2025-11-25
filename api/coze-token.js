@@ -1,6 +1,6 @@
 // Vercel Serverless Function to safely return Coze token from environment
 // Usage: set COZE_TOKEN in Vercel Environment Variables (Production/Preview/Development as needed)
-export default function handler(req, res) {
+module.exports = (req, res) => {
   const token = process.env.COZE_TOKEN;
   if(!token){
     res.statusCode = 500;
@@ -11,4 +11,4 @@ export default function handler(req, res) {
   // Return plain text token (client will call this endpoint to obtain token)
   res.setHeader('Content-Type','text/plain');
   res.end(token);
-}
+};
