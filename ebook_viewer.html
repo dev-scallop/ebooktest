@@ -266,22 +266,49 @@
 
       async function fetchToken(){
         try{
-          const r = await fetch('/api/coze-token');
-          if(!r.ok) throw new Error('Token fetch failed: ' + r.status);
-          return await r.text();
-        }catch(e){ console.warn('Failed to fetch Coze token from server', e); throw e; }
+          console.debug('[Coze] fetching token from /api/coze-token');
+          const r = await fetch('/api/coze-token', { cache: 'no-store' });
+          console.debug('[Coze] token response status=', r.status);
+          if(!r.ok){
+            const body = await r.text().catch(()=>'<no-body>');
+            console.warn('[Coze] token fetch failed, body=', body);
+            throw new Error('Token fetch failed: ' + r.status);
+          }
+          const token = await r.text();
+          console.debug('[Coze] received token length=', token ? token.length : 0);
+          return token;
+        }catch(e){
+          console.warn('[Coze] Failed to fetch Coze token from server', e);
+          throw e;
+        }
       }
 
       async function initCozeIfNeeded(){
-        if(cozeClient) return;
+        if(cozeClient){ console.debug('[Coze] client already initialized'); return; }
         try{
+          console.debug('[Coze] initCozeIfNeeded starting');
           const initialToken = await fetchToken();
-          cozeClient = new CozeWebSDK.WebChatClient({
-            config:{ bot_id: BOT_ID },
-            componentProps:{ title:'Coze', mountElement: document.getElementById('coze-chat-anchor') },
-            auth:{ type:'token', token: initialToken, onRefreshToken: async function(){ return await fetchToken(); } }
-          });
-        }catch(e){ console.warn('Coze init failed', e); }
+          if(!window.CozeWebSDK){
+            console.error('[Coze] SDK not loaded (window.CozeWebSDK is undefined)');
+            return;
+          }
+          console.debug('[Coze] initializing WebChatClient with BOT_ID=', BOT_ID);
+          try{
+            cozeClient = new CozeWebSDK.WebChatClient({
+              config:{ bot_id: BOT_ID },
+              componentProps:{ title:'Coze', mountElement: document.getElementById('coze-chat-anchor') },
+              auth:{ type:'token', token: initialToken, onRefreshToken: async function(){
+                console.debug('[Coze] onRefreshToken called');
+                return await fetchToken();
+              } }
+            });
+            console.info('[Coze] init success', !!cozeClient);
+          }catch(innerErr){
+            console.error('[Coze] error constructing WebChatClient', innerErr);
+          }
+        }catch(e){
+          console.error('[Coze] Coze init failed', e);
+        }
       }
 
       const toggleBtn = document.getElementById('coze-toggle-btn');
@@ -289,12 +316,21 @@
       const closeBtn = anchor.querySelector('.coze-close');
 
       toggleBtn.addEventListener('click', async ()=>{
-        await initCozeIfNeeded();
-        anchor.classList.add('coze-open');
-        anchor.setAttribute('aria-hidden','false');
-        toggleBtn.style.display = 'none';
+        console.debug('[Coze] toggle clicked');
+        try{
+          await initCozeIfNeeded();
+          anchor.classList.add('coze-open');
+          anchor.setAttribute('aria-hidden','false');
+          toggleBtn.style.display = 'none';
+          console.debug('[Coze] anchor opened');
+        }catch(e){
+          console.error('[Coze] error when opening chat', e);
+          // show fallback UI hint briefly
+          toggleBtn.innerText = '💬';
+        }
       });
       closeBtn.addEventListener('click', ()=>{
+        console.debug('[Coze] close clicked');
         anchor.classList.remove('coze-open');
         anchor.setAttribute('aria-hidden','true');
         toggleBtn.style.display = 'flex';
