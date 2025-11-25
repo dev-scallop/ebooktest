@@ -1,4 +1,5 @@
-const fetch = require('node-fetch');
+// Remove node-fetch dependency as Vercel Node.js 18+ has native fetch
+// const fetch = require('node-fetch'); 
 
 module.exports = async (req, res) => {
     // Handle CORS
@@ -16,8 +17,9 @@ module.exports = async (req, res) => {
     }
 
     const { query, conversation_id, user } = req.body;
-    const BOT_ID = '7576395788172050485'; // User provided Bot ID
-    const COZE_TOKEN = process.env.COZE_TOKEN; // Use environment variable for security
+    const BOT_ID = '7576395788172050485';
+    // Use environment variable, fallback to user provided token for testing
+    const COZE_TOKEN = process.env.COZE_TOKEN || 'pat_ZLQnuC8djEQB4OY4dan3wJnpLt5VWFW42KIigBMw3OFvF3f7kbB9QV42UuNbA1q4';
 
     if (!COZE_TOKEN) {
         return res.status(500).json({ error: 'Server configuration error: COZE_TOKEN is missing.' });
@@ -43,7 +45,7 @@ module.exports = async (req, res) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Coze API Error:', response.status, errorText);
-            return res.status(response.status).json({ error: 'Coze API Error: ' + response.status });
+            return res.status(response.status).json({ error: 'Coze API Error: ' + response.status + ' ' + errorText });
         }
 
         const data = await response.json();
