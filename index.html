@@ -9,7 +9,10 @@
     :root {
       --bg: #f3f4f6;
       --card: #fff;
-      --accent: #2563eb
+      --accent: #2563eb;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --border: #e2e8f0;
     }
 
     html,
@@ -18,9 +21,8 @@
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', sans-serif;
       background: var(--bg);
-      color: #0f172a;
+      color: var(--text-main);
       overflow: hidden;
-      /* Prevent global scrollbar */
     }
 
     .wrap {
@@ -28,7 +30,7 @@
       margin: 8px 16px;
       height: calc(100vh - 32px);
       display: flex;
-      gap: 12px
+      gap: 12px;
     }
 
     .panel {
@@ -37,7 +39,7 @@
       box-shadow: 0 6px 18px rgba(10, 10, 10, 0.06);
       overflow: hidden;
       display: flex;
-      flex-direction: column
+      flex-direction: column;
     }
 
     .left {
@@ -46,7 +48,6 @@
       order: 1;
     }
 
-    /* Right panel split layout */
     .right {
       flex: 0 0 40%;
       min-width: 280px;
@@ -64,11 +65,13 @@
       background: linear-gradient(90deg, #fff, rgba(37, 99, 235, 0.02));
       display: flex;
       align-items: center;
-      gap: 10px
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .title {
-      font-weight: 700
+      font-weight: 700;
+      font-size: 1rem;
     }
 
     .pdf-frame {
@@ -76,23 +79,36 @@
       border: 0;
       width: 100%;
       height: 100%;
-      overflow: auto
+      overflow: auto;
     }
 
-    .right-content {
-      flex: 1;
-      padding: 0;
-      /* Remove padding to let iframe fill */
+    /* Right panel split layout */
+    .explanation-section {
+      flex: 7;
+      /* 70% height */
+      border-bottom: 1px solid var(--border);
       overflow: hidden;
-      /* Iframe handles scroll */
-      border-bottom: 1px solid #e2e8f0;
-      position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
+    .chat-section {
+      flex: 3;
+      /* 30% height */
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .chat-header {
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .chat-header-icon {
@@ -145,102 +161,258 @@
     }
 
     .message.user {
-      div.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      align-self: flex-end;
+      background: var(--accent);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-area {
+      padding: 12px;
+      background: #fff;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent);
+    }
+
+    .chat-send-btn {
+      padding: 0 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .chat-send-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .chat-send-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 8px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: typing 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes typing {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <!-- Left Panel: PDF -->
+    <div class="panel left">
+      <div class="toolbar">
+        <span class="title">PDF Viewer</span>
+      </div>
+      <iframe class="pdf-frame" src="(10가지 핵심이론으로 만나는) 지속가능경영과 ESG-part-2.pdf"></iframe>
+    </div>
+
+    <!-- Right Panel: Explanation (70%) + Chat (30%) -->
+    <div class="panel right">
+      <!-- Explanation Section -->
+      <div class="explanation-section">
+        <div class="toolbar">
+          <span class="title">Easy Explanation</span>
+        </div>
+        <iframe class="pdf-frame" src="easy_explanation.html"></iframe>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="chat-section">
+        <div class="chat-header">
+          <div class="chat-header-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="chat-header-text">
+            <span class="chat-title">AI Tutor</span>
+            <span class="chat-subtitle">Ask anything about the text</span>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            안녕하세요! 궁금한 점이 있으시면 언제든 물어봐주세요.
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요...">
+          <button class="chat-send-btn" id="chatSendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSendBtn');
+    const chatMessages = document.getElementById('chatMessages');
+
+    function appendMessage(role, text) {
+      const div = document.createElement('div');
+      div.className = `message ${role}`;
+
+      // Simple markdown bold support
+      const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      div.innerHTML = formattedText;
+
       chatMessages.appendChild(div);
-      chatMessages.scrollTop=chatMessages.scrollHeight;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendLoading() {
+      const div = document.createElement('div');
+      div.id = 'typingIndicator';
+      div.className = 'typing-indicator';
+      div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function removeLoading() {
-      const el=document.getElementById('typingIndicator');
+      const el = document.getElementById('typingIndicator');
       if (el) el.remove();
     }
 
     async function sendMessage() {
-      const query=chatInput.value.trim();
-      if ( !query) return;
+      const query = chatInput.value.trim();
+      if (!query) return;
 
       // 1. User message
       appendMessage('user', query);
-      chatInput.value='';
-      chatInput.disabled=true;
-      chatSendBtn.disabled=true;
+      chatInput.value = '';
+      chatInput.disabled = true;
+      chatSendBtn.disabled = true;
 
       // 2. Loading
       appendLoading();
 
       try {
-
         // 3. Call Serverless Function
-        const res=await fetch('/api/coze-chat', {
-
+        const res = await fetch('/api/coze-chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
-          }
-
-          ,
+          },
           body: JSON.stringify({
             query: query,
             conversation_id: 'web_session_' + Date.now() // Simple session ID
           })
-      });
+        });
 
-    removeLoading();
+        removeLoading();
 
-    if ( !res.ok) {
-      // Try to parse error details
-      let errorMsg='Server error: '+res.status;
+        if (!res.ok) {
+          let errorMsg = 'Server error: ' + res.status;
+          try {
+            const errData = await res.json();
+            if (errData.error) errorMsg = errData.error;
+          } catch (e) { }
+          throw new Error(errorMsg);
+        }
 
-      try {
-        const errData=await res.json();
-        if (errData.error) errorMsg=errData.error;
+        const data = await res.json();
+
+        // Parse Coze response
+        let answer = "죄송합니다. 답변을 가져올 수 없습니다.";
+        if (Array.isArray(data.messages)) {
+          const answerMsg = data.messages.find(m => m.role === 'assistant' && m.type === 'answer');
+          if (answerMsg && answerMsg.content) {
+            answer = answerMsg.content;
+          }
+        } else if (data.error) {
+          answer = "오류 발생: " + data.error;
+        }
+
+        appendMessage('bot', answer);
+
+      } catch (e) {
+        removeLoading();
+        appendMessage('bot', '오류가 발생했습니다: ' + e.message);
+      } finally {
+        chatInput.disabled = false;
+        chatSendBtn.disabled = false;
+        chatInput.focus();
       }
-
-      catch (e) {}
-
-      throw new Error(errorMsg);
-    }
-
-    const data=await res.json();
-
-    // Parse Coze response to find the answer
-    let answer="죄송합니다. 답변을 가져올 수 없습니다.";
-
-    if (Array.isArray(data.messages)) {
-      const answerMsg=data.messages.find(m=> m.role==='assistant' && m.type==='answer');
-
-      if (answerMsg && answerMsg.content) {
-        answer=answerMsg.content;
-      }
-    }
-
-    else if (data.error) {
-      answer="오류 발생: "+data.error;
-    }
-
-    appendMessage('bot', answer);
-
-    }
-
-    catch (e) {
-      removeLoading();
-      appendMessage('bot', '오류가 발생했습니다: ' + e.message);
-    }
-
-    finally {
-      chatInput.disabled=false;
-      chatSendBtn.disabled=false;
-      chatInput.focus();
-    }
     }
 
     chatSendBtn.addEventListener('click', sendMessage);
 
-    chatInput.addEventListener('keypress', (e)=> {
-        if (e.key==='Enter' && !e.shiftKey) {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
-    })();
-    </script></body></html>
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+
+</html>
