@@ -128,103 +128,26 @@
     .close-btn {
       background: #ef4444;
       color: #fff;
-      border: 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer
     }
 
-    /* Auto-hide scrollbars applied to main containers */
-    html.auto-hide-scroll,
-    body.auto-hide-scroll,
-    .wrap.auto-hide-scroll,
-    .panel.auto-hide-scroll,
-    .right-content.auto-hide-scroll,
-    #pdfContainer.auto-hide-scroll,
-    .modal.auto-hide-scroll,
-    iframe.auto-hide-scroll {
-      scrollbar-width: none;
-      -ms-overflow-style: none
+    .left {
+      order: 1
     }
 
-    html.auto-hide-scroll::-webkit-scrollbar,
-    body.auto-hide-scroll::-webkit-scrollbar,
-    .wrap.auto-hide-scroll::-webkit-scrollbar,
-    .panel.auto-hide-scroll::-webkit-scrollbar,
-    .right-content.auto-hide-scroll::-webkit-scrollbar,
-    #pdfContainer.auto-hide-scroll::-webkit-scrollbar,
-    .modal.auto-hide-scroll::-webkit-scrollbar,
-    iframe.auto-hide-scroll::-webkit-scrollbar {
-      width: 8px;
-      background: transparent
+    .pdf-frame {
+      height: 60vh
     }
 
-    html.auto-hide-scroll::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .panel.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .right-content.auto-hide-scroll::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll::-webkit-scrollbar-thumb,
-    iframe.auto-hide-scroll::-webkit-scrollbar-thumb {
-      background: rgba(99, 102, 241, 0);
-      border-radius: 8px;
-      transition: background .18s
-    }
-
-    html.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .panel.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .right-content.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    iframe.auto-hide-scroll:hover::-webkit-scrollbar-thumb,
-    html.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    body.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .wrap.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .panel.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .right-content.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    #pdfContainer.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    .modal.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb,
-    iframe.auto-hide-scroll.show-scroll::-webkit-scrollbar-thumb {
-      background: rgba(99, 102, 241, 0.45)
+    /* Reserve space so floating chat button doesn't cover right-hand content */
+    .right {
+      padding-bottom: 96px
     }
 
     @media (max-width:900px) {
-      .wrap {
-        flex-direction: column;
-        height: auto
-      }
-
-      .left,
       .right {
-        flex: unset;
-        width: 100%
+        padding-bottom: 76px
       }
-
-      .right {
-        order: 2
-      }
-
-      .left {
-        order: 1
-      }
-
-      .pdf-frame {
-        height: 60vh
-      }
-
-      /* Reserve space so floating chat button doesn't cover right-hand content */
-      .right {
-        padding-bottom: 96px
-      }
-
-      @media (max-width:900px) {
-        .right {
-          padding-bottom: 76px
-        }
-      }
+    }
   </style>
   <script>
     // helper to encode local pdf path safely
