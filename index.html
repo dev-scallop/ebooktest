@@ -1,626 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>전자책 뷰어 — PDF + 해설 + 연습문제</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Textbook Platform</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- Google Fonts: Inter (Sans) and Merriweather (Serif) for premium feel -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --primary: #3b82f6;
-      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      --text-main: #0f172a;
-      --text-sub: #64748b;
-      --border: #e2e8f0;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .wrap {
-      max-width: 1600px;
-      margin: 0 auto;
-      height: 100vh;
-      padding: 16px;
-      display: flex;
-      gap: 16px;
-    }
-
-    .panel {
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .left {
-      flex: 0 0 55%;
-      min-width: 360px;
-      order: 1;
-    }
-
-    .right {
-      flex: 1;
-      min-width: 320px;
-      order: 2;
-      background: #fff;
-    }
-
-    .toolbar {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
-      z-index: 10;
-    }
-
-    .title {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .title::before {
-      content: '';
-      display: block;
-      width: 4px;
-      height: 16px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
-
-    .pdf-frame {
-      flex: 1;
-      border: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Right panel split layout */
-    .explanation-section {
-      flex: 6;
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .chat-section {
-      flex: 4;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: #fff;
-      transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    /* Expanded State */
-    .panel.right.expanded .explanation-section {
-      flex: 3;
-    }
-
-    .panel.right.expanded .chat-section {
-      flex: 7;
-    }
-
-    .chat-header {
-      padding: 16px 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-      backdrop-filter: blur(8px);
-    }
-
-    .chat-header-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-      color: var(--primary);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .chat-header-text {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .chat-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text-main);
-    }
-
-    .chat-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      font-weight: 500;
-    }
-
-    .chat-controls {
-      display: flex;
-      gap: 4px;
-    }
-
-    .icon-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      color: #94a3b8;
-      padding: 6px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .icon-btn:hover {
-      background: #f1f5f9;
-      color: var(--text-main);
-      border-color: var(--border);
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      scroll-behavior: smooth;
-    }
-
-    .message {
-      max-width: 88%;
-      padding: 14px 18px;
-      border-radius: 18px;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      position: relative;
-      word-wrap: break-word;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.2s;
-    }
-
-    .message:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .message.user {
-      align-self: flex-end;
-      background: var(--primary-gradient);
-      color: white;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    }
-
-    .message.bot {
-      align-self: flex-start;
-      background: white;
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      border-bottom-left-radius: 4px;
-    }
-
-    /* Markdown Styles */
-    .message p {
-      margin: 0 0 8px 0;
-    }
-
-    .message p:last-child {
-      margin-bottom: 0;
-    }
-
-    .message ul,
-    .message ol {
-      margin: 8px 0;
-      padding-left: 24px;
-    }
-
-    .message li {
-      margin-bottom: 4px;
-    }
-
-    .message h1,
-    .message h2,
-    .message h3 {
-      margin: 16px 0 8px 0;
-      font-size: 1.1em;
-      font-weight: 700;
-      color: inherit;
-    }
-
-    .message strong {
-      font-weight: 700;
-    }
-
-    .message code {
-      background: rgba(0, 0, 0, 0.05);
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.9em;
-    }
-
-    .message.user code {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .chat-input-area {
-      padding: 16px 20px;
-      background: #fff;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 10px;
-      flex-shrink: 0;
-      align-items: flex-end;
-    }
-
-    .chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      outline: none;
-      font-size: 0.95rem;
-      background: #f8fafc;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .chat-input:focus {
-      background: #fff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .chat-send-btn {
-      padding: 12px 20px;
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
-    }
-
-    .chat-send-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
-    }
-
-    .chat-send-btn:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* Navigation Button */
-    .nav-btn {
-      padding: 8px 14px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-sub);
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-btn:hover {
-      background: #f8fafc;
-      color: var(--primary);
-      border-color: #bfdbfe;
-      transform: translateY(-1px);
-    }
-
-    /* Typing Indicator */
-    .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 12px 16px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      border-bottom-left-radius: 4px;
-      align-self: flex-start;
-      width: fit-content;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .typing-dot {
-      width: 6px;
-      height: 6px;
-      background: #94a3b8;
-      border-radius: 50%;
-      animation: typing 1.4s infinite ease-in-out both;
-    }
-
-    .typing-dot:nth-child(1) {
-      animation-delay: -0.32s;
-    }
-
-    .typing-dot:nth-child(2) {
-      animation-delay: -0.16s;
-    }
-
-    @keyframes typing {
-
-      0%,
-      80%,
-      100% {
-        transform: scale(0);
-      }
-
-      40% {
-        transform: scale(1);
-      }
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 3px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-  </style>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700&display=swap"
+    rel="stylesheet">
+  <!-- Material Symbols for Icons -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
 <body>
-  <div class="wrap">
-    <!-- Left Panel: PDF -->
-    <div class="panel left">
-      <div class="toolbar">
-        <span class="title">PDF Viewer</span>
-      </div>
-      <iframe class="pdf-frame" src="chapter_01_part2.pdf"></iframe>
-    </div>
-
-    <!-- Right Panel: Explanation (70%) + Chat (30%) -->
-    <div class="panel right">
-      <!-- Explanation Section -->
-      <div class="explanation-section">
-        <div class="toolbar" style="justify-content: space-between;">
-          <span class="title">Easy Explanation</span>
-          <a href="practice_quiz.html" target="content-frame" class="nav-btn">
-            <span>추가 연습문제</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-        <iframe class="pdf-frame" name="content-frame" src="easy_explanation.html"></iframe>
+  <div class="app-container">
+    <!-- 1. Header (Top Bar) -->
+    <header class="top-bar" id="top-bar">
+      <div class="logo-area">
+        <span class="material-symbols-rounded icon">menu_book</span>
+        <span class="brand-name">에듀코어 (EduCore)</span>
       </div>
 
-      <!-- Chat Section -->
-      <div class="chat-section">
-        <div class="chat-header">
-          <div class="chat-header-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </div>
-          <div class="chat-header-text">
-            <span class="chat-title">AI Tutor</span>
-            <span class="chat-subtitle">10가지 핵심이론으로 만나는 지속가능경영과 ESG</span>
-          </div>
-          <div class="chat-controls">
-            <button class="icon-btn" id="toggleSizeBtn" title="Toggle Size">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <polyline points="9 21 3 21 3 15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-              </svg>
-            </button>
-          </div>
-        </div>
+      <div class="search-bar">
+        <span class="material-symbols-rounded search-icon">search</span>
+        <input type="text" placeholder="교재 내용 검색...">
+      </div>
 
-        <div class="chat-messages" id="chatMessages">
-          <div class="message bot">
-            안녕하세요! 저는 <strong>(10가지 핵심이론으로 만나는) 지속가능경영과 ESG</strong> 전용 AI 튜터입니다.<br>
-            교재 내용에 대해 무엇이든 물어보세요.<br><br>
-            <strong>💡 예시 질문:</strong>
-            <ul>
-              <li>📖 <strong>개념 질문:</strong> "[교재의 핵심 용어]의 정의가 뭐야?"</li>
-              <li>📝 <strong>요약 요청:</strong> "제 1장 내용을 핵심만 요약해 줘."</li>
-              <li>🎯 <strong>시험 대비:</strong> "이 챕터에서 시험에 나올만한 예상 문제를 만들어 줘."</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="chat-input-area">
-          <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요...">
-          <button class="chat-send-btn" id="chatSendBtn">Send</button>
+      <div class="header-controls">
+        <button class="icon-btn" aria-label="알림">
+          <span class="material-symbols-rounded">notifications</span>
+        </button>
+        <div class="user-profile">
+          <div class="avatar">학</div>
+          <span class="username">학생 뷰</span>
+          <span class="material-symbols-rounded">expand_more</span>
         </div>
       </div>
-    </div>
+    </header>
+
+    <!-- 2. Main Layout Grid -->
+    <main class="main-layout">
+      <!-- A. Left Sidebar: TOC -->
+      <aside class="sidebar-left" id="sidebar-left">
+        <div class="sidebar-header">
+          <h3>목차</h3>
+        </div>
+        <nav class="toc-list">
+          <!-- TOC Items -->
+          <div class="toc-item active" data-chapter="1">
+            <span class="chapter-num">01</span>
+            <span class="chapter-title">ESG 경영의 이해</span>
+          </div>
+          <div class="toc-item" data-chapter="2">
+            <span class="chapter-num">02</span>
+            <span class="chapter-title">환경(Environment)의 핵심</span>
+          </div>
+          <div class="toc-item" data-chapter="3">
+            <span class="chapter-num">03</span>
+            <span class="chapter-title">사회적 책임(Social)</span>
+          </div>
+          <div class="toc-item" data-chapter="4">
+            <span class="chapter-num">04</span>
+            <span class="chapter-title">지배구조(Governance)</span>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- B. Center: Main Viewer -->
+      <section class="main-viewer" id="main-viewer">
+        <div class="viewer-tabs">
+          <button class="tab-btn active" data-tab="textbook">본문 학습</button>
+          <button class="tab-btn" data-tab="guide">쉬운 해설</button>
+          <button class="tab-btn" data-tab="quiz">퀴즈</button>
+        </div>
+
+        <div class="content-area">
+          <!-- 1. Textbook View (PDF) -->
+          <article class="content-section active" id="chapter-1-textbook">
+            <iframe class="pdf-frame" src="chapter_01_part2.pdf"></iframe>
+          </article>
+
+          <article class="content-section hidden" id="chapter-2-textbook">
+            <div class="textbook-content" style="padding: 40px;">
+              <h1>제2장: 환경(Environment)의 핵심</h1>
+              <p>이 챕터의 PDF는 아직 준비되지 않았습니다.</p>
+            </div>
+          </article>
+
+          <!-- 2. Easy Guide View -->
+          <article class="content-section hidden" id="view-guide">
+            <iframe class="pdf-frame" src="easy_explanation.html"></iframe>
+          </article>
+
+          <!-- 3. Quiz View -->
+          <article class="content-section hidden" id="view-quiz">
+            <iframe class="pdf-frame" src="practice_quiz.html"></iframe>
+          </article>
+        </div>
+      </section>
+
+      <!-- C. Right: Helper Panel -->
+      <aside class="sidebar-right" id="sidebar-right">
+        <div class="panel-tabs">
+          <button class="panel-tab" data-panel="memo" title="메모"><span
+              class="material-symbols-rounded">edit_note</span></button>
+          <button class="panel-tab active" data-panel="ai" title="AI 요약"><span
+              class="material-symbols-rounded">auto_awesome</span></button>
+          <button class="panel-tab" data-panel="dict" title="용어사전"><span
+              class="material-symbols-rounded">dictionary</span></button>
+        </div>
+
+        <div class="panel-content">
+          <!-- 1. Memo Panel -->
+          <div class="sidebar-panel" id="panel-memo">
+            <div class="helper-card">
+              <h4>나의 메모</h4>
+              <div class="note-item">
+                <span class="note-ref">1.1절</span>
+                <p>'지배구조'의 정의를 꼭 기억하자.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. AI Chat Panel -->
+          <div class="sidebar-panel active" id="panel-ai">
+            <div class="ai-chat-interface helper-card">
+              <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                  <div class="avatar-small">AI</div>
+                  <div class="bubble">안녕하세요! 저는 <strong>(10가지 핵심이론으로 만나는) 지속가능경영과 ESG</strong> 전용 AI 튜터입니다.<br>
+                    교재 내용에 대해 무엇이든 물어보세요.<br><br>
+                    <strong>💡 예시 질문:</strong>
+                    <ul>
+                      <li>📖 <strong>개념 질문:</strong> "[교재의 핵심 용어]의 정의가 뭐야?"</li>
+                      <li>📝 <strong>요약 요청:</strong> "제 1장 내용을 핵심만 요약해 줘."</li>
+                      <li>🎯 <strong>시험 대비:</strong> "이 챕터에서 시험에 나올만한 예상 문제를 만들어 줘."</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="질문을 입력하세요...">
+                <button class="send-btn" id="chatSendBtn"><span class="material-symbols-rounded">send</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Dictionary Panel -->
+          <div class="sidebar-panel" id="panel-dict">
+            <div class="helper-card">
+              <h4>용어 사전</h4>
+              <p><strong>ESG</strong>: Environmental, Social, and Governance의 약자.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 3. Bottom Footer -->
+    <footer class="bottom-bar">
+      <button class="nav-btn prev">
+        <span class="material-symbols-rounded">arrow_back</span>
+        이전
+      </button>
+
+      <div class="progress-container">
+        <span class="progress-text">12 / 45 페이지</span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 25%"></div>
+        </div>
+      </div>
+
+      <button class="nav-btn next">
+        다음
+        <span class="material-symbols-rounded">arrow_forward</span>
+      </button>
+    </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    const chatInput = document.getElementById('chatInput');
-    const chatSendBtn = document.getElementById('chatSendBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    const rightPanel = document.querySelector('.panel.right');
-    const toggleSizeBtn = document.getElementById('toggleSizeBtn');
-
-    // Generate a persistent session ID for this page load
-    const SESSION_ID = 'web_session_' + Date.now();
-
-    // Toggle Size Handler
-    toggleSizeBtn.addEventListener('click', () => {
-      rightPanel.classList.toggle('expanded');
-    });
-
-    function appendMessage(role, text) {
-      const div = document.createElement('div');
-      div.className = `message ${role}`;
-
-      // Render Markdown using marked.js
-      div.innerHTML = marked.parse(text);
-
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-
-      // Auto-expand if bot message is long (> 150 chars)
-      if (role === 'bot' && text.length > 150) {
-        rightPanel.classList.add('expanded');
-      }
-    }
-
-    function appendLoading() {
-      const div = document.createElement('div');
-      div.id = 'typingIndicator';
-      div.className = 'typing-indicator';
-      div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function removeLoading() {
-      const el = document.getElementById('typingIndicator');
-      if (el) el.remove();
-    }
-
-    async function sendMessage() {
-      const query = chatInput.value.trim();
-      if (!query) return;
-
-      // 1. User message
-      appendMessage('user', query);
-      chatInput.value = '';
-      chatInput.disabled = true;
-      chatSendBtn.disabled = true;
-
-      // 2. Loading
-      appendLoading();
-
-      try {
-        // 3. Call Serverless Function
-        const res = await fetch('/api/coze-chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            query: query,
-            conversation_id: SESSION_ID
-          })
-        });
-
-        removeLoading();
-
-        if (!res.ok) {
-          let errorMsg = 'Server error: ' + res.status;
-          try {
-            const errData = await res.json();
-            if (errData.error) errorMsg = errData.error;
-          } catch (e) { }
-          throw new Error(errorMsg);
-        }
-
-        const data = await res.json();
-
-        // Parse Coze response
-        let answer = "죄송합니다. 답변을 가져올 수 없습니다.";
-        if (Array.isArray(data.messages)) {
-          const answerMsg = data.messages.find(m => m.role === 'assistant' && m.type === 'answer');
-          if (answerMsg && answerMsg.content) {
-            answer = answerMsg.content;
-          }
-        } else if (data.error) {
-          answer = "오류 발생: " + data.error;
-        }
-
-        appendMessage('bot', answer);
-
-      } catch (e) {
-        removeLoading();
-        appendMessage('bot', '오류가 발생했습니다: ' + e.message);
-      } finally {
-        chatInput.disabled = false;
-        chatSendBtn.disabled = false;
-        chatInput.focus();
-      }
-    }
-
-    chatSendBtn.addEventListener('click', sendMessage);
-
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-  </script>
+  <script src="scripts/main.js"></script>
 </body>
 
 </html>

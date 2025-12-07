@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Textbook Platform</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Google Fonts: Inter (Sans) and Merriweather (Serif) for premium feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <!DOCTYPE html>
+    <html lang="ko">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Digital Textbook Platform</title>
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- Google Fonts: Inter (Sans) and Merriweather (Serif) for premium feel -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700&display=swap"
+            rel="stylesheet">
+        <!-- Material Symbols for Icons -->
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    </head>
+
+<body>
+    <div class="app-container">
+        <!-- 1. Header (Top Bar) -->
+        <header class="top-bar" id="top-bar">
+            <div class="logo-area">
+                <span class="material-symbols-rounded icon">menu_book</span>
+                <span class="brand-name">에듀코어 (EduCore)</span>
+            </div>
+
+            <div class="search-bar">
+                <span class="material-symbols-rounded search-icon">search</span>
+                <input type="text" placeholder="교재 내용 검색...">
+            </div>
+
+            <div class="header-controls">
+                <button class="icon-btn" aria-label="알림">
+                    <span class="material-symbols-rounded">notifications</span>
+                </button>
+                <div class="user-profile">
+                    <div class="avatar">학</div>
+                    <span class="username">학생 뷰</span>
+                    <span class="material-symbols-rounded">expand_more</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. Main Layout Grid -->
+        <main class="main-layout">
+            <!-- A. Left Sidebar: TOC -->
+            <aside class="sidebar-left" id="sidebar-left">
+                <div class="sidebar-header">
+                    <h3>목차</h3>
+                </div>
+                <nav class="toc-list">
+                    <!-- TOC Items -->
+                    <div class="toc-item active" data-chapter="1">
+                        <span class="chapter-num">01</span>
+                        <span class="chapter-title">ESG 경영의 이해</span>
+                    </div>
+                    <div class="toc-item" data-chapter="2">
+                        <span class="chapter-num">02</span>
+                        <span class="chapter-title">환경(Environment)의 핵심</span>
+                    </div>
+                    <div class="toc-item" data-chapter="3">
+                        <span class="chapter-num">03</span>
+                        <span class="chapter-title">사회적 책임(Social)</span>
+                    </div>
+                    <div class="toc-item" data-chapter="4">
+                        <span class="chapter-num">04</span>
+                        <span class="chapter-title">지배구조(Governance)</span>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- B. Center: Main Viewer -->
+            <section class="main-viewer" id="main-viewer">
+                <div class="viewer-tabs">
+                    <button class="tab-btn active" data-tab="textbook">본문 학습</button>
+                    <button class="tab-btn" data-tab="guide">쉬운 해설</button>
+                    <button class="tab-btn" data-tab="quiz">퀴즈</button>
+                    <button class="tab-btn ai-tab" data-tab="ai"><span
+                            class="material-symbols-rounded">auto_awesome</span> AI 튜터</button>
+                </div>
+
+                <div class="content-area">
+                    <!-- Chapter 1 Content -->
+                    <article class="textbook-content chapter-content active" id="chapter-1-textbook">
+                        <h1>제1장: ESG 경영의 이해</h1>
+                        <p class="lead">현대 비즈니스에서 환경, 사회, 지배구조 프레임워크의 기본 원칙을 이해합니다.</p>
+
+                        <h2>1.1 ESG란 무엇인가?</h2>
+                        <p>ESG는 환경(Environmental), 사회(Social), 지배구조(Governance)의 약자입니다. 이는 기업이 주주뿐만 아니라 직원, 고객, 공급업체 등
+                            모든 이해관계자를 위한 가치를 창출하는 방식을 고려하여 조직 전략에 내재화하도록 설계된 프레임워크입니다.</p>
+
+                        <div class="highlight-box">
+                            <span class="icon material-symbols-rounded">lightbulb</span>
+                            <p><strong>핵심 개념:</strong> ESG는 단순한 규제 준수가 아니라, 지속 가능한 가치를 창출하는 것입니다.</p>
+                        </div>
+
+                        <p>투자자들은 기업의 중대한 리스크와 성장 기회를 식별하기 위한 분석 과정의 일부로 이러한 비재무적 요소를 점점 더 많이 적용하고 있습니다.</p>
+                    </article>
+
+                    <!-- Chapter 2 Content -->
+                    <article class="textbook-content chapter-content hidden" id="chapter-2-textbook">
+                        <h1>제2장: 환경(Environment)의 핵심</h1>
+                        <p class="lead">기후 변화 대응과 자원 순환을 위한 기업의 환경적 책임을 탐구합니다.</p>
+
+                        <h2>2.1 탄소 중립과 넷제로</h2>
+                        <p>기업 활동으로 배출되는 온실가스를 최대한 줄이고, 남은 배출량은 흡수하거나 제거하여 실질적인 배출량을 '0'으로 만드는 것을 의미합니다.</p>
+                    </article>
+
+                    <!-- Easy Guide View (Dynamic based on chapter) -->
+                    <article class="content-section hidden" id="view-guide">
+                        <h1>쉬운 해설: 제1장</h1>
+                        <div class="guide-card">
+                            <h3>🌱 ESG, 쉽게 알아볼까요?</h3>
+                            <p>ESG는 기업의 '성적표'와 같습니다. 단순히 돈을 얼마나 벌었는지가 아니라, <strong>어떻게</strong> 벌었는지를 평가하는 것이죠.</p>
+                            <ul>
+                                <li><strong>E (환경):</strong> 공해를 일으키지 않나요? 재활용은 잘 하나요?</li>
+                                <li><strong>S (사회):</strong> 직원들을 잘 대우하나요?</li>
+                                <li><strong>G (지배구조):</strong> 사장님은 정직한가요?</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Quiz View -->
+                    <article class="content-section hidden" id="view-quiz">
+                        <h1>제1장 퀴즈</h1>
+                        <div class="quiz-container">
+                            <div class="quiz-item">
+                                <p class="question">1. ESG의 'G'는 무엇의 약자일까요?</p>
+                                <div class="options">
+                                    <label><input type="radio" name="q1"> Global (글로벌)</label>
+                                    <label><input type="radio" name="q1"> Green (녹색)</label>
+                                    <label><input type="radio" name="q1"> Governance (지배구조)</label>
+                                    <label><input type="radio" name="q1"> Government (정부)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- AI Tutor View -->
+                    <article class="content-section hidden" id="view-ai">
+                        <div class="ai-chat-interface">
+                            <div class="chat-messages">
+                                <div class="message ai">
+                                    <div class="avatar-small">AI</div>
+                                    <div class="bubble">안녕하세요! AI 튜터입니다. 1장에 대해 궁금한 점이 있으신가요?</div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" placeholder="질문을 입력하세요...">
+                                <button class="send-btn"><span class="material-symbols-rounded">send</span></button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- C. Right: Helper Panel -->
+            <aside class="sidebar-right" id="sidebar-right">
+                <div class="panel-tabs">
+                    <button class="panel-tab active" title="메모"><span
+                            class="material-symbols-rounded">edit_note</span></button>
+                    <button class="panel-tab" title="요약"><span
+                            class="material-symbols-rounded">summarize</span></button>
+                    <button class="panel-tab" title="용어사전"><span
+                            class="material-symbols-rounded">dictionary</span></button>
+                </div>
+
+                <div class="panel-content">
+                    <div class="helper-card">
+                        <h4>AI 요약</h4>
+                        <p>이 장에서는 ESG의 핵심 개념을 소개하며, 단순한 재무적 지표를 넘어 비즈니스 전략에 어떻게 통합되는지에 초점을 맞춥니다.</p>
+                    </div>
+
+                    <div class="helper-card">
+                        <h4>나의 메모</h4>
+                        <div class="note-item">
+                            <span class="note-ref">1.1절</span>
+                            <p>'지배구조'의 정의를 꼭 기억하자.</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- 3. Bottom Footer -->
+        <footer class="bottom-bar">
+            <button class="nav-btn prev">
+                <span class="material-symbols-rounded">arrow_back</span>
+                이전
+            </button>
+
+            <div class="progress-container">
+                <span class="progress-text">12 / 45 페이지</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 25%"></div>
+                </div>
+            </div>
+
+            <button class="nav-btn next">
+                다음
+                <span class="material-symbols-rounded">arrow_forward</span>
+            </button>
+        </footer>
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>
+</body>
+
+</html>

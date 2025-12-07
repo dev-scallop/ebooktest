@@ -1,5 +1,4 @@
-// Remove node-fetch dependency as Vercel Node.js 18+ has native fetch
-// const fetch = require('node-fetch'); 
+h = require('node-fetch'); 
 
 module.exports = async (req, res) => {
     // Handle CORS
